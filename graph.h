@@ -4,11 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 typedef struct _vertex
 {
   struct _vertex **edgeArr;
   unsigned edgeArrLength;
   char *valueID;
+  int exit;
 } Vertex;
 
 typedef struct _graph
@@ -17,12 +19,25 @@ typedef struct _graph
   unsigned vertexArrLength;
 } Graph;
 
+// Checa se há item duplicado
+int checkDuplicate(int arr[], int size, int value)
+{
+  for (int i = 0; i < size; i++)
+  {
+    if (arr[i] == value)
+    {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 // Cria um Vétice novo.
 Vertex *newVertex(char *newValueID)
 {
   Vertex *vertex = (Vertex *)malloc(sizeof(Vertex));
-  strcpy(vertex->valueID, newValueID);
-  free(newValueID);
+  vertex->valueID = newValueID;
+  vertex->exit = 0;
   return vertex;
 }
 
@@ -32,7 +47,11 @@ void newEdge(Vertex *A, Vertex *B)
   int auxA = A->edgeArrLength;
   int auxB = B->edgeArrLength;
 
+  // Realocamos
+  A->edgeArr = (Vertex **)realloc(A->edgeArr, (A->edgeArrLength + 1) * sizeof(Vertex));
   A->edgeArr[auxA] = B;
+
+  B->edgeArr = (Vertex **)realloc(B->edgeArr, (B->edgeArrLength + 1) * sizeof(Vertex));
   B->edgeArr[auxB] = A;
 
   A->edgeArrLength++;
@@ -51,14 +70,17 @@ void newMultipleEdge(Vertex *target, Vertex *vertexArr[], unsigned vertexArrLeng
 Graph *createGraph(unsigned difficult)
 {
   Graph *graph = (Graph *)malloc(sizeof(Graph));
+  printf("Debug.");
 
-  // Array de vértices principais.
-  Vertex **principais;
+  graph->vertexArrLength = difficult * 3;
+
+  // Array de vértices principais, intuito de debug.
+  Vertex **principais = (Vertex **)malloc(graph->vertexArrLength * sizeof(Vertex *));
 
   srand(NULL);
 
   // Variáveis para ver se há repetição.
-  int integerNames[difficult * 3];
+  int integerNames[graph->vertexArrLength];
   int integersNamesSize = 0;
 
   // Cria os vertices com nome de caverna_ + random.
@@ -75,9 +97,7 @@ Graph *createGraph(unsigned difficult)
     integersNamesSize++;
 
     char *name;
-
     sprintf(name, "caverna_%d", rand);
-
     principais[i] = newVertex(name);
   }
 
@@ -85,15 +105,15 @@ Graph *createGraph(unsigned difficult)
   for (int i = 1; i < difficult; i++)
   {
     Vertex *atual = principais[i - 1];
+    printf("Valor: %s\n", atual->valueID);
     newEdge(atual, principais[i]);
   }
 
-  // Array de vértices de distração.
-  Vertex **distratores;
-  int qntdDist = difficult * 2;
+  // Atribui o último
+  principais[difficult - 1]->exit = 1;
 
   // Cria os Vertices de distração
-  for (int i = 0; i < qntdDist; i++)
+  for (int i = difficult; i < graph->vertexArrLength; i++)
   {
     int rand;
     // Impede repetição
@@ -101,22 +121,33 @@ Graph *createGraph(unsigned difficult)
     {
       rand = (int)(random() % 10000);
     } while (checkDuplicate(integerNames, integersNamesSize, rand));
+
     integerNames[integersNamesSize] = rand;
     integersNamesSize++;
 
     char *name;
     sprintf(name, "caverna_%d", rand);
-    distratores[i] = newVertex(name);
+    principais[i] = newVertex(name);
   }
 
-  // Coloca os vértices de distração de forma randômica nos vertices principais
-  // e também adiciona os vértices de distração à lista dos vértices principais.
-  /*
-    Implementar
-  */
+  // Colocar os vértices de distração de forma randômica nos vertices principais
+  for (int i = difficult; i < graph->vertexArrLength; i++)
+  {
+    for (int j = 0; j < graph->vertexArrLength; j++)
+    {
+      if (i != j)
+      {
+        int chance = (int)random() % 100;
+        if (chance < 50)
+        {
+          // Impedir duplicadas.
+          newEdge(principais[i], principais[j]);
+        }
+      }
+    }
+  }
 
   graph->vertexArr = principais;
-  graph->vertexArrLength += qntdDist + difficult;
   return graph;
 }
 
@@ -127,19 +158,8 @@ void freeGraph(Graph *graph)
   for (int i = 0; i < aux; i++)
   {
     Vertex *vert = graph->vertexArr[i];
+    free(vert->edgeArr);
     free(vert);
   }
   free(graph);
-}
-
-int checkDuplicate(int arr[], int size, int value)
-{
-  for (int i = 0; i < size; i++)
-  {
-    if (arr[i] == value)
-    {
-      return 0;
-    }
-  }
-  return 1;
 }

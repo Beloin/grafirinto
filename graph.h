@@ -4,12 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 typedef struct _vertex
 {
   struct _vertex **edgeArr;
   unsigned edgeArrLength;
-  char *valueID;
+  int valueID;
   int exit;
 } Vertex;
 
@@ -33,7 +32,7 @@ int checkDuplicate(int arr[], int size, int value)
 }
 
 // Cria um Vétice novo.
-Vertex *newVertex(char *newValueID)
+Vertex *newVertex(int newValueID)
 {
   Vertex *vertex = (Vertex *)malloc(sizeof(Vertex));
   vertex->valueID = newValueID;
@@ -69,8 +68,8 @@ void newMultipleEdge(Vertex *target, Vertex *vertexArr[], unsigned vertexArrLeng
 
 Graph *createGraph(unsigned difficult)
 {
+  printf("Debug.\n");
   Graph *graph = (Graph *)malloc(sizeof(Graph));
-  printf("Debug.");
 
   graph->vertexArrLength = difficult * 3;
 
@@ -96,16 +95,13 @@ Graph *createGraph(unsigned difficult)
     integerNames[integersNamesSize] = rand;
     integersNamesSize++;
 
-    char *name;
-    sprintf(name, "caverna_%d", rand);
-    principais[i] = newVertex(name);
+    principais[i] = newVertex(rand);
   }
 
   // Cria a sequência principal.
   for (int i = 1; i < difficult; i++)
   {
     Vertex *atual = principais[i - 1];
-    printf("Valor: %s\n", atual->valueID);
     newEdge(atual, principais[i]);
   }
 
@@ -125,9 +121,7 @@ Graph *createGraph(unsigned difficult)
     integerNames[integersNamesSize] = rand;
     integersNamesSize++;
 
-    char *name;
-    sprintf(name, "caverna_%d", rand);
-    principais[i] = newVertex(name);
+    principais[i] = newVertex(rand);
   }
 
   // Colocar os vértices de distração de forma randômica nos vertices principais
@@ -145,6 +139,15 @@ Graph *createGraph(unsigned difficult)
         }
       }
     }
+  }
+
+  for (int i = 0; i < graph->vertexArrLength; i++)
+  {
+    if (i == difficult)
+    {
+      printf("\nDistração:\n");
+    }
+    printf("Valor: %d\n", graph->vertexArr[i]);
   }
 
   graph->vertexArr = principais;

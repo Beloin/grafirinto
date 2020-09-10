@@ -58,7 +58,7 @@ Graph *createGraph(unsigned difficult)
   srand(NULL);
 
   // Variáveis para ver se há repetição.
-  int integerNames[difficult * 2];
+  int integerNames[difficult * 3];
   int integersNamesSize = 0;
 
   // Cria os vertices com nome de caverna_ + random.
@@ -109,14 +109,14 @@ Graph *createGraph(unsigned difficult)
     distratores[i] = newVertex(name);
   }
 
-  // Coloca os vértices de distração de forma randomica nos vertices principais
+  // Coloca os vértices de distração de forma randômica nos vertices principais
   // e também adiciona os vértices de distração à lista dos vértices principais.
   /*
     Implementar
   */
 
   graph->vertexArr = principais;
-  graph->vertexArrLength += difficult * 3;
+  graph->vertexArrLength += qntdDist + difficult;
   return graph;
 }
 

@@ -29,6 +29,19 @@ int checkDuplicate(int arr[], int size, int value)
   return 0;
 }
 
+// Verifica se o Vértice A possui uma aresta com o Vértice B
+int hasEdgeBetween(Vertex *A, Vertex *B)
+{
+  for (unsigned i = 0; i < A->edgeArrLength; i++)
+  {
+    if (A->edgeArr[i] == B)
+    {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 // Cria um Vétice novo.
 Vertex *newVertex(unsigned newValueID)
 {
@@ -78,18 +91,17 @@ Graph *newGraph(unsigned numberOfVertices)
 // Cria uma aresta entre os vértices A e B
 void newEdge(Vertex *A, Vertex *B)
 {
-  int auxA = A->edgeArrLength;
-  int auxB = B->edgeArrLength;
+  if (!hasEdgeBetween(A, B))
+  {
+    A->edgeArrLength++;
+    B->edgeArrLength++;
 
-  // Realocamos
-  A->edgeArr = (Vertex **)realloc(A->edgeArr, (A->edgeArrLength + 1) * sizeof(Vertex));
-  A->edgeArr[auxA] = B;
+    A->edgeArr = (Vertex **)realloc(A->edgeArr, A->edgeArrLength * sizeof(Vertex *));
+    B->edgeArr = (Vertex **)realloc(B->edgeArr, B->edgeArrLength * sizeof(Vertex *));
 
-  B->edgeArr = (Vertex **)realloc(B->edgeArr, (B->edgeArrLength + 1) * sizeof(Vertex));
-  B->edgeArr[auxB] = A;
-
-  A->edgeArrLength++;
-  B->edgeArrLength++;
+    A->edgeArr[A->edgeArrLength - 1] = B;
+    B->edgeArr[B->edgeArrLength - 1] = A;
+  }
 }
 
 // Cria múltiplas arestas entre o vértice target os vértices em vertexArr

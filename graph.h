@@ -188,16 +188,29 @@ Graph *createGraph(unsigned difficult)
     }
   }
 
+  // Atribuição do array principais ao vertexArr
+  graph->vertexArr = principais;
+
+  /**
+   * Testes para ver se está funcional.
+  */
   for (int i = 0; i < graph->vertexArrLength; i++)
   {
     if (i == difficult)
     {
       printf("\nDistração:\n");
     }
-    printf("Valor: %d\n", graph->vertexArr[i]);
+    printf("Vértice Atual: %d\n", graph->vertexArr[i]->valueID);
+    for (int j = 0; j < graph->vertexArr[i]->edgeArrLength; j++)
+    {
+      printf("\tConecta ao: %d\n", graph->vertexArr[i]->edgeArr[j]->valueID);
+      if (graph->vertexArr[i]->edgeArr[j]->isExit)
+      {
+        printf("Saída!!!\n");
+      }
+    }
   }
 
-  graph->vertexArr = principais;
   return graph;
 }
 

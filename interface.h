@@ -27,17 +27,30 @@ void printVertex(Vertex *vertex)
 }
 
 /* 
- *  Com base na quantidade de opções verifica se
+ *  Com base na quantidade de opções, verifica se
  * o usuário escolheu uma opção válida e a retorna 
 */
 unsigned getOption(unsigned numberOfOptions)
 {
+  unsigned option = 0;
+  do
+  {
+    printf("Por favor, informe um natural que pertence ao intervalo [0, %u]: ", numberOfOptions);
+    scanf("%u", &option);
+  } while (option > numberOfOptions);
+
+  return option;
 }
 
 void app()
 {
   // printf Tela de Apresentação.
-
+  printf("/================\\\n");
+  printf("|-- Grafirinto --| \n");
+  printf("\\================/\n");
+  
+  printf("\n* Bem vindo ao Grafirinto! *\n");
+  printf("* Por favor informe a dificuldade! *\n");
   // Escolha de dificuldade getOption();
   // criar Grafo de acordo com a dificuldade.
   Graph *graph = createGraph(getOption(10));

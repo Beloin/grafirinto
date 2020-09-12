@@ -18,9 +18,12 @@ unsigned printEdges(Vertex *vertex)
   return vertex->edgeArrLength + 1;
 }
 
-void printVertex(Vertex *vertice)
+void printVertex(Vertex *vertex)
 {
-  printf("Vertex: %d\n", vertice->valueID);
+  printf("/============\\\n");
+  printf("|Vertex: %04u|\n", vertex->valueID);
+  printf("|isExit: %04u|\n", vertex->isExit);
+  printf("\\============/\n");
 }
 
 /* 
@@ -68,7 +71,7 @@ void app()
     // ir para vértice escolhido
     currentVertex = currentVertex->edgeArr[option];
   }
-
+  printVertex(currentVertex);
   freeGraph(graph);
 
   if (!hasAbandonMatch)

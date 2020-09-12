@@ -7,9 +7,7 @@
 typedef struct _vertex
 {
   struct _vertex **edgeArr;
-  unsigned edgeArrLength;
-  int valueID;
-  int exit;
+  unsigned edgeArrLength, valueID, isExit;
 } Vertex;
 
 typedef struct _graph
@@ -32,12 +30,49 @@ int checkDuplicate(int arr[], int size, int value)
 }
 
 // Cria um Vétice novo.
-Vertex *newVertex(int newValueID)
+Vertex *newVertex(unsigned newValueID)
 {
-  Vertex *vertex = (Vertex *)malloc(sizeof(Vertex));
+  // Aloca um novo Vértice
+  Vertex *vertex = NULL;
+  do
+  {
+    vertex = (Vertex *)malloc(sizeof(Vertex));
+  } while (vertex == NULL);
+
+  // Inicializa os valores do Vértice
+  vertex->isExit = 0;
+  vertex->edgeArr = NULL;
+  vertex->edgeArrLength = 0;
   vertex->valueID = newValueID;
-  vertex->exit = 0;
+
   return vertex;
+}
+
+// Cria um Grafo novo
+Graph *newGraph(unsigned numberOfVertices)
+{
+  // Aloca um novo Grafo
+  Graph *graph = NULL;
+  do
+  {
+    graph = (Graph *)malloc(sizeof(Graph));
+  } while (graph == NULL);
+
+  // Aloca um novo array de Vértices
+  graph->vertexArr = NULL;
+  do
+  {
+    graph->vertexArr = (Vertex **)malloc(numberOfVertices * sizeof(Vertex *));
+  } while (graph->vertexArr == NULL);
+
+  // Inicializa os valueID e isExit dos vertices alocados
+  for (unsigned i = 0; i < numberOfVertices; i++)
+  {
+    graph->vertexArr[i] = newVertex(i);
+  }
+
+  graph->vertexArrLength = numberOfVertices;
+  return graph;
 }
 
 // Cria uma aresta entre os vértices A e B
@@ -106,7 +141,7 @@ Graph *createGraph(unsigned difficult)
   }
 
   // Atribui o último
-  principais[difficult - 1]->exit = 1;
+  principais[difficult - 1]->isExit = 1;
 
   // Cria os Vertices de distração
   for (int i = difficult; i < graph->vertexArrLength; i++)

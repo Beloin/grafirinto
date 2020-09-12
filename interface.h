@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 #include "graph.h"
 
 /** 
@@ -14,10 +15,19 @@ unsigned printEdges(Vertex *vertex)
     printf("Option %u: vertex(%u)\n", i, vertex->edgeArr[i]->valueID);
   }
   printf("Option %u: Abandon match\n", vertex->edgeArrLength);
-  
-  return vertex->edgeArrLength + 1;
+
+  return vertex->edgeArrLength;
 }
 
+void printEdgeMap(Graph *Graph)
+{}
+
+void printExitMap(Graph *graph, Vertex *currentVertex)
+{}
+
+/**
+ *  Exibe os detalhes principais do Vértice para o usuário.
+*/
 void printVertex(Vertex *vertex)
 {
   printf("/============\\\n");
@@ -26,9 +36,9 @@ void printVertex(Vertex *vertex)
   printf("\\============/\n");
 }
 
-/* 
- *  Com base na quantidade de opções, verifica se
- * o usuário escolheu uma opção válida e a retorna 
+/**
+ *  Com base no número de opções, verifica se o usuário
+ * informou uma opção válida e a retorna.
 */
 unsigned getOption(unsigned numberOfOptions)
 {
@@ -48,7 +58,7 @@ void app()
   printf("/================\\\n");
   printf("|-- Grafirinto --| \n");
   printf("\\================/\n");
-  
+
   printf("\n* Bem vindo ao Grafirinto! *\n");
   printf("* Por favor informe a dificuldade! *\n");
   // Escolha de dificuldade getOption();
@@ -87,6 +97,7 @@ void app()
   printVertex(currentVertex);
   freeGraph(graph);
 
+  // Após ter saído do loop
   if (!hasAbandonMatch)
   {
     // se SAÍDA: Parabéns você venceu!

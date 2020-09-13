@@ -3,6 +3,19 @@
 #include <stdio.h>
 #include "graph.h"
 
+//  Retorna um unsigned informado pelo usuário que esteja no intervalo [minOption, maxOption].
+unsigned getOption(unsigned minOption, unsigned maxOption)
+{
+  unsigned option = 0;
+  do
+  {
+    printf("Por favor, informe um natural que pertence ao intervalo [%u, %u]: ", minOption, maxOption);
+    scanf("%u", &option);
+  } while ((option < minOption) || (option > maxOption));
+
+  return option;
+}
+
 /** 
  *  Exibe no console as opções que o jogador pode escolher
  * em função da quantidade de arestas que o vértice possui
@@ -19,6 +32,7 @@ unsigned printEdges(Vertex *vertex)
   return vertex->edgeArrLength;
 }
 
+// Exibe no console uma matriz binária das arestas do grafo
 void printEdgeMap(Graph *graph)
 {
   // Cabeçalho da matriz
@@ -45,6 +59,8 @@ void printEdgeMap(Graph *graph)
   printf("\n");
 }
 
+// Exibe no console uma matriz binária das arestas do grafo.
+// Marcando qual aresta é a atual e qual é a saída.
 void printExitMap(Graph *graph, Vertex *currentVertex)
 {
   // Cabeçalho da matriz
@@ -92,31 +108,13 @@ void printExitMap(Graph *graph, Vertex *currentVertex)
   printf("\n");
 }
 
-/**
- *  Exibe os detalhes principais do Vértice para o usuário.
-*/
+// Exibe no console os detalhes principais do Vértice para o usuário.
 void printVertex(Vertex *vertex)
 {
   printf("/============\\\n");
   printf("|Vertex: %04u|\n", vertex->valueID);
   printf("|isExit: %04u|\n", vertex->isExit);
   printf("\\============/\n");
-}
-
-/**
- *  Com base no número de opções, verifica se o usuário
- * informou uma opção válida e a retorna.
-*/
-unsigned getOption(unsigned minOption, unsigned maxOption)
-{
-  unsigned option = 0;
-  do
-  {
-    printf("Por favor, informe um natural que pertence ao intervalo [%u, %u]: ", minOption, maxOption);
-    scanf("%u", &option);
-  } while ((option < minOption) || (option > maxOption));
-
-  return option;
 }
 
 void app()
@@ -128,30 +126,29 @@ void app()
 
   printf("\n* Bem vindo ao Grafirinto! *\n");
   printf("* Por favor informe a dificuldade! *\n");
-  // Escolha de dificuldade getOption();
-  // criar Grafo de acordo com a dificuldade.
+
+  // Escolha de dificuldade com getOption();
+  // Criar Grafo de acordo com a dificuldade.
   Graph *graph = createGraph(getOption(3, 10));
 
-  // Vertice atual.
+  // Vertice inicial.
   Vertex *currentVertex = graph->vertexArr[0];
 
-  // Opção da escolha dos vértices.
-  unsigned option = 0;
+  unsigned option = 0,     // Opção da escolha dos vértices.
+      hasAbandonMatch = 0; // Verifica se o usuário escolheu desistir.
 
-  // Verifica se o usuário escolheu desistir.
-  unsigned hasAbandonMatch = 0;
-
-  // main loop => Enquanto não estiver na saída.
+  // main loop enquanto não estiver no vértice de saída.
   while (!currentVertex->isExit)
   {
-    // Print vertice atual: printVertex();
+    // Print vertice atual
     printVertex(currentVertex);
 
     // Opcional: Print [MAPA]
     printExitMap(graph, currentVertex);
 
-    // printEdges() mostra os vértices para ir a partir do atual.
-    // getOption(); // incluir opção desistência
+    // printEdges() mostra no console os vértices para ir a partir do vértice atual.
+    // getOption() retorna um unsigned no intervalo [0, currentVertex->edgeArrLength].
+    // Salva a escolha do usuário para verificar se ele desistiu ou não.
     option = getOption(0, printEdges(currentVertex));
     if (option == currentVertex->edgeArrLength)
     {

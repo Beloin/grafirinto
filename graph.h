@@ -61,33 +61,6 @@ Vertex *newVertex(unsigned newValueID)
   return vertex;
 }
 
-// Cria um Grafo novo
-Graph *newGraph(unsigned numberOfVertices)
-{
-  // Aloca um novo Grafo
-  Graph *graph = NULL;
-  do
-  {
-    graph = (Graph *)malloc(sizeof(Graph));
-  } while (graph == NULL);
-
-  // Aloca um novo array de Vértices
-  graph->vertexArr = NULL;
-  do
-  {
-    graph->vertexArr = (Vertex **)malloc(numberOfVertices * sizeof(Vertex *));
-  } while (graph->vertexArr == NULL);
-
-  // Inicializa os valueID e isExit dos vertices alocados
-  for (unsigned i = 0; i < numberOfVertices; i++)
-  {
-    graph->vertexArr[i] = newVertex(i);
-  }
-
-  graph->vertexArrLength = numberOfVertices;
-  return graph;
-}
-
 // Cria uma aresta entre os vértices A e B
 void newEdge(Vertex *A, Vertex *B)
 {
@@ -123,7 +96,7 @@ Graph *createGraph(unsigned difficult)
   // Array de vértices principais, intuito de debug.
   Vertex **principais = (Vertex **)malloc(graph->vertexArrLength * sizeof(Vertex *));
 
-  srand((unsigned) NULL);
+  srand((unsigned)NULL);
 
   // Variáveis para ver se há repetição.
   int integerNames[graph->vertexArrLength];
@@ -190,27 +163,6 @@ Graph *createGraph(unsigned difficult)
 
   // Atribuição do array principais ao vertexArr
   graph->vertexArr = principais;
-
-  // /**
-  //  * Testes para ver se está funcional.
-  // */
-  // for (int i = 0; i < graph->vertexArrLength; i++)
-  // {
-  //   if (i == difficult)
-  //   {
-  //     printf("\nDistração:\n");
-  //   }
-  //   printf("Vértice Atual: %d\n", graph->vertexArr[i]->valueID);
-  //   for (int j = 0; j < graph->vertexArr[i]->edgeArrLength; j++)
-  //   {
-  //     printf("\tConecta ao: %d\n", graph->vertexArr[i]->edgeArr[j]->valueID);
-  //     if (graph->vertexArr[i]->edgeArr[j]->isExit)
-  //     {
-  //       printf("Saída!!!\n");
-  //     }
-  //   }
-  // }
-
   return graph;
 }
 

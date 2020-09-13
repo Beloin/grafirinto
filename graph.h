@@ -115,7 +115,7 @@ void newMultipleEdge(Vertex *target, Vertex *vertexArr[], unsigned vertexArrLeng
 
 Graph *createGraph(unsigned difficult)
 {
-  printf("Debug.\n");
+  // printf("Debug.\n");
   Graph *graph = (Graph *)malloc(sizeof(Graph));
 
   graph->vertexArrLength = difficult * 3;
@@ -123,7 +123,7 @@ Graph *createGraph(unsigned difficult)
   // Array de vértices principais, intuito de debug.
   Vertex **principais = (Vertex **)malloc(graph->vertexArrLength * sizeof(Vertex *));
 
-  srand(NULL);
+  srand((unsigned) NULL);
 
   // Variáveis para ver se há repetição.
   int integerNames[graph->vertexArrLength];
@@ -191,25 +191,25 @@ Graph *createGraph(unsigned difficult)
   // Atribuição do array principais ao vertexArr
   graph->vertexArr = principais;
 
-  /**
-   * Testes para ver se está funcional.
-  */
-  for (int i = 0; i < graph->vertexArrLength; i++)
-  {
-    if (i == difficult)
-    {
-      printf("\nDistração:\n");
-    }
-    printf("Vértice Atual: %d\n", graph->vertexArr[i]->valueID);
-    for (int j = 0; j < graph->vertexArr[i]->edgeArrLength; j++)
-    {
-      printf("\tConecta ao: %d\n", graph->vertexArr[i]->edgeArr[j]->valueID);
-      if (graph->vertexArr[i]->edgeArr[j]->isExit)
-      {
-        printf("Saída!!!\n");
-      }
-    }
-  }
+  // /**
+  //  * Testes para ver se está funcional.
+  // */
+  // for (int i = 0; i < graph->vertexArrLength; i++)
+  // {
+  //   if (i == difficult)
+  //   {
+  //     printf("\nDistração:\n");
+  //   }
+  //   printf("Vértice Atual: %d\n", graph->vertexArr[i]->valueID);
+  //   for (int j = 0; j < graph->vertexArr[i]->edgeArrLength; j++)
+  //   {
+  //     printf("\tConecta ao: %d\n", graph->vertexArr[i]->edgeArr[j]->valueID);
+  //     if (graph->vertexArr[i]->edgeArr[j]->isExit)
+  //     {
+  //       printf("Saída!!!\n");
+  //     }
+  //   }
+  // }
 
   return graph;
 }

@@ -115,101 +115,35 @@ void newMultipleEdge(Vertex *target, Vertex *vertexArr[], unsigned vertexArrLeng
 
 Graph *createGraph(unsigned difficult)
 {
-  // printf("Debug.\n");
-  Graph *graph = (Graph *)malloc(sizeof(Graph));
+  Graph *graph = newGraph(difficult * 3);
 
-  graph->vertexArrLength = difficult * 3;
-
-  // Array de vértices principais, intuito de debug.
-  Vertex **principais = (Vertex **)malloc(graph->vertexArrLength * sizeof(Vertex *));
-
-  srand((unsigned) NULL);
-
-  // Variáveis para ver se há repetição.
-  int integerNames[graph->vertexArrLength];
-  int integersNamesSize = 0;
-
-  // Cria os vertices com nome de caverna_ + random.
-  for (int i = 0; i < difficult; i++)
-  {
-    int rand;
-    // Impede repetição
-    do
-    {
-      rand = (int)(random() % 10000);
-    } while (checkDuplicate(integerNames, integersNamesSize, rand));
-
-    integerNames[integersNamesSize] = rand;
-    integersNamesSize++;
-
-    principais[i] = newVertex(rand);
-  }
-
-  // Cria a sequência principal.
+  // Cria a sequência principal, um caminho do vértice inicial à saída
   for (int i = 1; i < difficult; i++)
   {
-    Vertex *atual = principais[i - 1];
-    newEdge(atual, principais[i]);
+    Vertex *atual = graph->vertexArr[i - 1];
+    newEdge(atual, graph->vertexArr[i]);
   }
 
-  // Atribui o último
-  principais[difficult - 1]->isExit = 1;
+  // Atribui o último Vértice da sequência principal como saída do grafirinto
+  graph->vertexArr[difficult - 1]->isExit = 1;
 
-  // Cria os Vertices de distração
-  for (int i = difficult; i < graph->vertexArrLength; i++)
+  srand((unsigned)(NULL));
+  
+  // Cria arestas com os vértices de distração de forma randômica entre os vertices graph->vertexArr
+  for (unsigned i = difficult; i < graph->vertexArrLength; i++)
   {
-    int rand;
-    // Impede repetição
-    do
-    {
-      rand = (int)(random() % 10000);
-    } while (checkDuplicate(integerNames, integersNamesSize, rand));
-
-    integerNames[integersNamesSize] = rand;
-    integersNamesSize++;
-
-    principais[i] = newVertex(rand);
-  }
-
-  // Colocar os vértices de distração de forma randômica nos vertices principais
-  for (int i = difficult; i < graph->vertexArrLength; i++)
-  {
-    for (int j = 0; j < graph->vertexArrLength; j++)
+    for (unsigned j = 0; j < graph->vertexArrLength; j++)
     {
       if (i != j)
       {
-        int chance = (int)random() % 100;
+        unsigned chance = (unsigned)(random() % 100);
         if (chance < 50)
         {
-          // Impedir duplicadas.
-          newEdge(principais[i], principais[j]);
+          newEdge(graph->vertexArr[i], graph->vertexArr[j]);
         }
       }
     }
   }
-
-  // Atribuição do array principais ao vertexArr
-  graph->vertexArr = principais;
-
-  // /**
-  //  * Testes para ver se está funcional.
-  // */
-  // for (int i = 0; i < graph->vertexArrLength; i++)
-  // {
-  //   if (i == difficult)
-  //   {
-  //     printf("\nDistração:\n");
-  //   }
-  //   printf("Vértice Atual: %d\n", graph->vertexArr[i]->valueID);
-  //   for (int j = 0; j < graph->vertexArr[i]->edgeArrLength; j++)
-  //   {
-  //     printf("\tConecta ao: %d\n", graph->vertexArr[i]->edgeArr[j]->valueID);
-  //     if (graph->vertexArr[i]->edgeArr[j]->isExit)
-  //     {
-  //       printf("Saída!!!\n");
-  //     }
-  //   }
-  // }
 
   return graph;
 }

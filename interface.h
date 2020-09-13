@@ -85,7 +85,7 @@ void app()
     // printEdges() mostra os vértices para ir a partir do atual.
     // getOption(); // incluir opção desistência
     option = getOption(printEdges(currentVertex));
-    if (option > currentVertex->edgeArrLength)
+    if (option == currentVertex->edgeArrLength)
     {
       hasAbandonMatch = 1;
       break;

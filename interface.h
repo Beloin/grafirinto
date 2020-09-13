@@ -19,11 +19,78 @@ unsigned printEdges(Vertex *vertex)
   return vertex->edgeArrLength;
 }
 
-void printEdgeMap(Graph *Graph)
-{}
+void printEdgeMap(Graph *graph)
+{
+  // Cabeçalho da matriz
+  printf("\n    |");
+  for (unsigned i = 0; i < graph->vertexArrLength; i++)
+  {
+    printf("%4u|", graph->vertexArr[i]->valueID);
+  }
+  printf("\n");
+
+  // Corpo da matriz
+  for (unsigned i = 0; i < graph->vertexArrLength; i++)
+  {
+    // Coluna
+    printf("%4u|", graph->vertexArr[i]->valueID);
+
+    // Pares da matriz
+    for (unsigned j = 0; j < graph->vertexArrLength; j++)
+    {
+      printf("%4u|", hasEdgeBetween(graph->vertexArr[i], graph->vertexArr[j]) ? 1 : 0);
+    }
+    printf("\n");
+  }
+  printf("\n");
+}
 
 void printExitMap(Graph *graph, Vertex *currentVertex)
-{}
+{
+  // Cabeçalho da matriz
+  printf("\nEMap|");
+  for (unsigned i = 0; i < graph->vertexArrLength; i++)
+  {
+    if (graph->vertexArr[i] == currentVertex)
+    {
+      printf("Here|");
+    }
+    else if (graph->vertexArr[i]->isExit)
+    {
+      printf("Exit|");
+    }
+    else
+    {
+      printf("%4u|", graph->vertexArr[i]->valueID);
+    }
+  }
+  printf("\n");
+
+  // Corpo da matriz
+  for (unsigned i = 0; i < graph->vertexArrLength; i++)
+  {
+    // Coluna
+    if (graph->vertexArr[i] == currentVertex)
+    {
+      printf("Here|");
+    }
+    else if (graph->vertexArr[i]->isExit)
+    {
+      printf("Exit|");
+    }
+    else
+    {
+      printf("%4u|", graph->vertexArr[i]->valueID);
+    }
+    // Pares da matriz
+    for (unsigned j = 0; j < graph->vertexArrLength; j++)
+    {
+      printf("%4u|", hasEdgeBetween(graph->vertexArr[i], graph->vertexArr[j]) ? 1 : 0);
+    }
+    printf("\n");
+  }
+  printf("\n");
+}
 
 /**
  *  Exibe os detalhes principais do Vértice para o usuário.
@@ -40,14 +107,14 @@ void printVertex(Vertex *vertex)
  *  Com base no número de opções, verifica se o usuário
  * informou uma opção válida e a retorna.
 */
-unsigned getOption(unsigned numberOfOptions)
+unsigned getOption(unsigned minOption, unsigned maxOption)
 {
   unsigned option = 0;
   do
   {
-    printf("Por favor, informe um natural que pertence ao intervalo [0, %u]: ", numberOfOptions);
+    printf("Por favor, informe um natural que pertence ao intervalo [%u, %u]: ", minOption, maxOption);
     scanf("%u", &option);
-  } while (option > numberOfOptions);
+  } while ((option < minOption) || (option > maxOption));
 
   return option;
 }
@@ -63,7 +130,7 @@ void app()
   printf("* Por favor informe a dificuldade! *\n");
   // Escolha de dificuldade getOption();
   // criar Grafo de acordo com a dificuldade.
-  Graph *graph = createGraph(getOption(10));
+  Graph *graph = createGraph(getOption(3, 10));
 
   // Vertice atual.
   Vertex *currentVertex = graph->vertexArr[0];
@@ -81,10 +148,11 @@ void app()
     printVertex(currentVertex);
 
     // Opcional: Print [MAPA]
+    printExitMap(graph, currentVertex);
 
     // printEdges() mostra os vértices para ir a partir do atual.
     // getOption(); // incluir opção desistência
-    option = getOption(printEdges(currentVertex));
+    option = getOption(0, printEdges(currentVertex));
     if (option == currentVertex->edgeArrLength)
     {
       hasAbandonMatch = 1;

@@ -16,19 +16,6 @@ typedef struct _graph
   unsigned vertexArrLength;
 } Graph;
 
-// Checa se há item duplicado
-int checkDuplicate(int arr[], int size, int value)
-{
-  for (int i = 0; i < size; i++)
-  {
-    if (arr[i] == value)
-    {
-      return 1;
-    }
-  }
-  return 0;
-}
-
 // Verifica se o Vértice A possui uma aresta com o Vértice B
 int hasEdgeBetween(Vertex *A, Vertex *B)
 {
@@ -40,6 +27,35 @@ int hasEdgeBetween(Vertex *A, Vertex *B)
     }
   }
   return 0;
+}
+
+// Cria uma aresta entre os vértices A e B
+void newEdge(Vertex *A, Vertex *B)
+{
+  if (!hasEdgeBetween(A, B))
+  {
+    A->edgeArrLength++;
+    B->edgeArrLength++;
+
+    A->edgeArr = (Vertex **)realloc(A->edgeArr, A->edgeArrLength * sizeof(Vertex *));
+    B->edgeArr = (Vertex **)realloc(B->edgeArr, B->edgeArrLength * sizeof(Vertex *));
+
+    A->edgeArr[A->edgeArrLength - 1] = B;
+    B->edgeArr[B->edgeArrLength - 1] = A;
+  }
+}
+
+// Libera da memória o Grafo atual.
+void freeGraph(Graph *graph)
+{
+  for (unsigned i = 0; i < graph->vertexArrLength; i++)
+  {
+    Vertex *vert = graph->vertexArr[i];
+    free(vert->edgeArr);
+    free(vert);
+  }
+  free(graph->vertexArr);
+  free(graph);
 }
 
 // Cria um Vétice novo.
@@ -88,31 +104,6 @@ Graph *newGraph(unsigned numberOfVertices)
   return graph;
 }
 
-// Cria uma aresta entre os vértices A e B
-void newEdge(Vertex *A, Vertex *B)
-{
-  if (!hasEdgeBetween(A, B))
-  {
-    A->edgeArrLength++;
-    B->edgeArrLength++;
-
-    A->edgeArr = (Vertex **)realloc(A->edgeArr, A->edgeArrLength * sizeof(Vertex *));
-    B->edgeArr = (Vertex **)realloc(B->edgeArr, B->edgeArrLength * sizeof(Vertex *));
-
-    A->edgeArr[A->edgeArrLength - 1] = B;
-    B->edgeArr[B->edgeArrLength - 1] = A;
-  }
-}
-
-// Cria múltiplas arestas entre o vértice target os vértices em vertexArr
-void newMultipleEdge(Vertex *target, Vertex *vertexArr[], unsigned vertexArrLength)
-{
-  for (unsigned i = 0; i < vertexArrLength; i++)
-  {
-    newEdge(target, vertexArr[i]);
-  }
-}
-
 Graph *createGraph(unsigned difficult)
 {
   Graph *graph = newGraph(difficult * 3);
@@ -128,7 +119,7 @@ Graph *createGraph(unsigned difficult)
   graph->vertexArr[difficult - 1]->isExit = 1;
 
   srand((unsigned)(NULL));
-  
+
   // Cria arestas com os vértices de distração de forma randômica entre os vertices graph->vertexArr
   for (unsigned i = difficult; i < graph->vertexArrLength; i++)
   {
@@ -148,15 +139,24 @@ Graph *createGraph(unsigned difficult)
   return graph;
 }
 
-// Libera da memória o Grafo atual.
-void freeGraph(Graph *graph)
-{
-  int aux = graph->vertexArrLength;
-  for (int i = 0; i < aux; i++)
-  {
-    Vertex *vert = graph->vertexArr[i];
-    free(vert->edgeArr);
-    free(vert);
-  }
-  free(graph);
-}
+// // Checa se há item duplicado
+// int checkDuplicate(int arr[], int size, int value)
+// {
+//   for (int i = 0; i < size; i++)
+//   {
+//     if (arr[i] == value)
+//     {
+//       return 1;
+//     }
+//   }
+//   return 0;
+// }
+
+// // Cria múltiplas arestas entre o vértice target os vértices em vertexArr
+// void newMultipleEdge(Vertex *target, Vertex *vertexArr[], unsigned vertexArrLength)
+// {
+//   for (unsigned i = 0; i < vertexArrLength; i++)
+//   {
+//     newEdge(target, vertexArr[i]);
+//   }
+// }
